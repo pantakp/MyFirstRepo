@@ -1,1 +1,1 @@
-ctrl+alt+end is the prescribed way to do this.
+This is used to opearte on windows machine. ctrl+alt+end is the prescribed way to do this.
