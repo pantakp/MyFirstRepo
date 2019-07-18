@@ -1,0 +1,1103 @@
+DEFINE
+  VAR __DS0FilterTable = 
+    FILTER(
+      KEEPFILTERS(VALUES('DimDate'[CalendarDate])),
+      AND(
+        'DimDate'[CalendarDate] >= DATE(2019, 1, 1),
+        'DimDate'[CalendarDate] < DATE(2019, 1, 3)
+      )
+    )
+
+  VAR __DS0FilterTable2 = 
+    TREATAS({"S48866164"}, 'FactOrderHistory'[OrderNumber])
+
+  VAR __DS0FilterTable3 = 
+    TREATAS({"Enterprise"}, 'DimCustomers'[Division])
+
+  VAR __DS0FilterTable4 = 
+    TREATAS(
+      {"International Enterprise-UK",
+        "Melissa Graham Teams"},
+      'DimCustomers'[RegionDivision]
+    )
+
+  VAR __DS0FilterTable5 = 
+    TREATAS({"International",
+      "Strategic Accounts"}, 'DimCustomers'[DivisionSegment])
+
+  VAR __DS0FilterTable6 = 
+    TREATAS(
+      {"Brian Araujo Retail",
+        "Justin Eisenberg Retail",
+        "Pharmaceutical",
+        "Telecom/Named",
+        "Verizon",
+        "International Enterprise-UK-Strategic Accounts-Melissa Graham Teams",
+        "International Enterprise-UK-Enterprise"},
+      'DimCustomers'[RegionName]
+    )
+
+  VAR __DS0FilterTable7 = 
+    TREATAS(
+      {"AT&T Affiliates (52530)",
+        "AT&T/THOMAS CLEARY (04989)",
+        "AT&T/TOM CLEARY (0067B)",
+        "Bob Crane (Justin Eisenberg) (42410)",
+        "Bristol Myers Squibb - Canada (CA00074)",
+        "Bristol Myers Squibb (00074)",
+        "CINGULAR (08005)",
+        "Eric Findeis (69190)",
+        "Eric Knight (71910)",
+        "GLAXOSMITHKLINE (16560)",
+        "GLAXOSMITHKLINE (UK16560)",
+        "J&J EA (02102)",
+        "J&J Servers (02101)",
+        "Joe Knutsen (Melissa Graham) (50920)",
+        "John Reckamp (66730)",
+        "Linda Presutti (Melissa Graham) (42770)",
+        "Linda Presutti/New Bus Dev (Melissa Graham) (42771)",
+        "Melissa Graham UK Teams",
+        "Melissa Graham/Doug Raynor (04812)",
+        "Melissa Graham/Doug Raynor-Canada (CA04812)",
+        "MELISSA GRAHAM-AT&T for resale (04810)",
+        "Merck - Canada (CA12115)",
+        "MERCK CANADA (12115)",
+        "MERCK/LO (12113)",
+        "MERCK/MARC (UK954)",
+        "MERCK/WILLIAMSON (12112)",
+        "Mike Krawchuk - Retail (Jesse Johnson) (62650)",
+        "NORTH CENTRAL/FRONTIER (17210)",
+        "Pharma - Chedid (75230)",
+        "Pharma - Crawley (47770)",
+        "Pharma - Daily (03970)",
+        "Pharma - Findeis (04940)",
+        "Pharma - J&J (02100)",
+        "Pharma - J. Johnson (Brian Araujo) (49160)",
+        "Pharma - Knapp (50521)",
+        "Pharma - Knight (41240)",
+        "Pharma - Marks (11932)",
+        "Pharma - Merck (12110)",
+        "Pharma - Miller (58230)",
+        "Pharma - Reckamp (19971)",
+        "Pharma - TBD (50431)",
+        "Pharma - TBD (56730)",
+        "Pharma US - Spooner/Knapp (74870)",
+        "Retail - Bostick (52880)",
+        "Retail - Butsko (50430)",
+        "Retail - J. Knutsen Canada (CA050)",
+        "Retail - Knapp (50520)",
+        "Retail - Knight (41241)",
+        "Retail - Malvasi (47781)",
+        "Retail - Miller (57410)",
+        "Retail - Reckamp (19970)",
+        "Retail - TBD (47780)",
+        "Retail - TBD 2 (49161)",
+        "SANOFI AVENTIS (04394)",
+        "Sanofi Aventis AP (HK0014)",
+        "Sanofi Aventis AP (UK077)",
+        "Sanofi Aventis Singapore (SG024)",
+        "SBC (08010)",
+        "Sears Projects (04811)",
+        "Sheila Ashy (Brian Araujo) (63880)",
+        "Steve Rudner (56830)",
+        "Telecom - Ashy - AT&T (55970)",
+        "Telecom - Butsko (56170)",
+        "Telecom - Klein - AT&T (00067)",
+        "Telecom - Malvasi - Sprint (04395)",
+        "Telecom - Malvasi (49162)",
+        "Telecom - Marks - Nokia/Avaya (00068)",
+        "Telecom - Marks (00069)",
+        "Telecom - Marks/Kirkman (04941)",
+        "Telecom - Miller (57411)",
+        "Telecom - Rudner - AT&T (04391)",
+        "Telecom - Sander - Brinks (Brian Araujo) (50522)",
+        "Telecom - TBD 1 (00071)",
+        "Telecom - TBD 2 (00711)",
+        "Telecom - TBD 3 (76350)",
+        "Telecom/Named - Dahliana (50432)",
+        "Telecom/Named - Simpson (47771)",
+        "Verizon - Rudner (00062)",
+        "Verizon - Ryder (59760)",
+        "Verizon - Ryder/Rudner (68230)",
+        "Verizon - Wandover (00161)",
+        "Verizon - Wishnow (67240)",
+        "VERIZON (00061)",
+        "Verizon New Business Development (00162)",
+        "VZW SOFTWARE (00210)",
+        "Yung Vo (Brian Araujo) (71920)"},
+      'DimBusinessUnit'[Level5Name]
+    )
+
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL(
+        ROLLUPGROUP(
+          'FactInvoiceHistory'[CustomerPONumber],
+          'FactInvoiceHistory'[InvoiceNumber],
+          'FactInvoiceHistory'[ManufacturerName],
+          'FactInvoiceHistory'[InvoiceLineNumber],
+          'DimProduct'[MfgPartNumber],
+          'DimProduct'[PartName]
+        ), "IsGrandTotalRowTotal"
+      ),
+      __DS0FilterTable,
+      __DS0FilterTable2,
+      __DS0FilterTable3,
+      __DS0FilterTable4,
+      __DS0FilterTable5,
+      __DS0FilterTable6,
+      __DS0FilterTable7,
+      "FirstDateInvoiced", 'FactInvoiceHistory'[FirstDateInvoiced],
+      "SumCustomerExtendedPriceUSD", CALCULATE(SUM('FactInvoiceHistory'[CustomerExtendedPriceUSD])),
+      "SumQtyInvoiced", CALCULATE(SUM('FactInvoiceHistory'[QtyInvoiced]))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    [FirstDateInvoiced],
+    1,
+    'FactInvoiceHistory'[CustomerPONumber],
+    1,
+    'FactInvoiceHistory'[InvoiceNumber],
+    1,
+    'FactInvoiceHistory'[ManufacturerName],
+    1,
+    'FactInvoiceHistory'[InvoiceLineNumber],
+    1,
+    'DimProduct'[MfgPartNumber],
+    1,
+    'DimProduct'[PartName],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC,
+  [FirstDateInvoiced],
+  'FactInvoiceHistory'[CustomerPONumber],
+  'FactInvoiceHistory'[InvoiceNumber],
+  'FactInvoiceHistory'[ManufacturerName],
+  'FactInvoiceHistory'[InvoiceLineNumber],
+  'DimProduct'[MfgPartNumber],
+  'DimProduct'[PartName]
+
+
+==================
+DEFINE
+  VAR __DS0FilterTable = 
+    FILTER(
+      KEEPFILTERS(VALUES('DimDate'[CalendarDate])),
+      AND(
+        'DimDate'[CalendarDate] >= DATE(2019, 1, 1),
+        'DimDate'[CalendarDate] < DATE(2019, 1, 3)
+      )
+    )
+
+  VAR __DS0FilterTable2 = 
+    TREATAS({"00067"}, 'DimCustomers'[Saleskey])
+
+  VAR __DS0FilterTable3 = 
+    TREATAS({"Enterprise"}, 'DimCustomers'[Division])
+
+  VAR __DS0FilterTable4 = 
+    TREATAS(
+      {"International Enterprise-UK",
+        "Melissa Graham Teams"},
+      'DimCustomers'[RegionDivision]
+    )
+
+  VAR __DS0FilterTable5 = 
+    TREATAS({"International",
+      "Strategic Accounts"}, 'DimCustomers'[DivisionSegment])
+
+  VAR __DS0FilterTable6 = 
+    TREATAS(
+      {"Brian Araujo Retail",
+        "Justin Eisenberg Retail",
+        "Pharmaceutical",
+        "Telecom/Named",
+        "Verizon",
+        "International Enterprise-UK-Strategic Accounts-Melissa Graham Teams",
+        "International Enterprise-UK-Enterprise"},
+      'DimCustomers'[RegionName]
+    )
+
+  VAR __DS0FilterTable7 = 
+    TREATAS(
+      {"AT&T Affiliates (52530)",
+        "AT&T/THOMAS CLEARY (04989)",
+        "AT&T/TOM CLEARY (0067B)",
+        "Bob Crane (Justin Eisenberg) (42410)",
+        "Bristol Myers Squibb - Canada (CA00074)",
+        "Bristol Myers Squibb (00074)",
+        "CINGULAR (08005)",
+        "Eric Findeis (69190)",
+        "Eric Knight (71910)",
+        "GLAXOSMITHKLINE (16560)",
+        "GLAXOSMITHKLINE (UK16560)",
+        "J&J EA (02102)",
+        "J&J Servers (02101)",
+        "Joe Knutsen (Melissa Graham) (50920)",
+        "John Reckamp (66730)",
+        "Linda Presutti (Melissa Graham) (42770)",
+        "Linda Presutti/New Bus Dev (Melissa Graham) (42771)",
+        "Melissa Graham UK Teams",
+        "Melissa Graham/Doug Raynor (04812)",
+        "Melissa Graham/Doug Raynor-Canada (CA04812)",
+        "MELISSA GRAHAM-AT&T for resale (04810)",
+        "Merck - Canada (CA12115)",
+        "MERCK CANADA (12115)",
+        "MERCK/LO (12113)",
+        "MERCK/MARC (UK954)",
+        "MERCK/WILLIAMSON (12112)",
+        "Mike Krawchuk - Retail (Jesse Johnson) (62650)",
+        "NORTH CENTRAL/FRONTIER (17210)",
+        "Pharma - Chedid (75230)",
+        "Pharma - Crawley (47770)",
+        "Pharma - Daily (03970)",
+        "Pharma - Findeis (04940)",
+        "Pharma - J&J (02100)",
+        "Pharma - J. Johnson (Brian Araujo) (49160)",
+        "Pharma - Knapp (50521)",
+        "Pharma - Knight (41240)",
+        "Pharma - Marks (11932)",
+        "Pharma - Merck (12110)",
+        "Pharma - Miller (58230)",
+        "Pharma - Reckamp (19971)",
+        "Pharma - TBD (50431)",
+        "Pharma - TBD (56730)",
+        "Pharma US - Spooner/Knapp (74870)",
+        "Retail - Bostick (52880)",
+        "Retail - Butsko (50430)",
+        "Retail - J. Knutsen Canada (CA050)",
+        "Retail - Knapp (50520)",
+        "Retail - Knight (41241)",
+        "Retail - Malvasi (47781)",
+        "Retail - Miller (57410)",
+        "Retail - Reckamp (19970)",
+        "Retail - TBD (47780)",
+        "Retail - TBD 2 (49161)",
+        "SANOFI AVENTIS (04394)",
+        "Sanofi Aventis AP (HK0014)",
+        "Sanofi Aventis AP (UK077)",
+        "Sanofi Aventis Singapore (SG024)",
+        "SBC (08010)",
+        "Sears Projects (04811)",
+        "Sheila Ashy (Brian Araujo) (63880)",
+        "Steve Rudner (56830)",
+        "Telecom - Ashy - AT&T (55970)",
+        "Telecom - Butsko (56170)",
+        "Telecom - Klein - AT&T (00067)",
+        "Telecom - Malvasi - Sprint (04395)",
+        "Telecom - Malvasi (49162)",
+        "Telecom - Marks - Nokia/Avaya (00068)",
+        "Telecom - Marks (00069)",
+        "Telecom - Marks/Kirkman (04941)",
+        "Telecom - Miller (57411)",
+        "Telecom - Rudner - AT&T (04391)",
+        "Telecom - Sander - Brinks (Brian Araujo) (50522)",
+        "Telecom - TBD 1 (00071)",
+        "Telecom - TBD 2 (00711)",
+        "Telecom - TBD 3 (76350)",
+        "Telecom/Named - Dahliana (50432)",
+        "Telecom/Named - Simpson (47771)",
+        "Verizon - Rudner (00062)",
+        "Verizon - Ryder (59760)",
+        "Verizon - Ryder/Rudner (68230)",
+        "Verizon - Wandover (00161)",
+        "Verizon - Wishnow (67240)",
+        "VERIZON (00061)",
+        "Verizon New Business Development (00162)",
+        "VZW SOFTWARE (00210)",
+        "Yung Vo (Brian Araujo) (71920)"},
+      'DimBusinessUnit'[Level5Name]
+    )
+
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL(
+        ROLLUPGROUP(
+          'FactInvoiceHistory'[CustomerPONumber],
+          'FactInvoiceHistory'[InvoiceNumber],
+          'FactInvoiceHistory'[ManufacturerName],
+          'FactInvoiceHistory'[InvoiceLineNumber],
+          'DimProduct'[MfgPartNumber],
+          'DimProduct'[PartName]
+        ), "IsGrandTotalRowTotal"
+      ),
+      __DS0FilterTable,
+      __DS0FilterTable2,
+      __DS0FilterTable3,
+      __DS0FilterTable4,
+      __DS0FilterTable5,
+      __DS0FilterTable6,
+      __DS0FilterTable7,
+      "FirstDateInvoiced", 'FactInvoiceHistory'[FirstDateInvoiced],
+      "SumCustomerExtendedPriceUSD", CALCULATE(SUM('FactInvoiceHistory'[CustomerExtendedPriceUSD])),
+      "SumQtyInvoiced", CALCULATE(SUM('FactInvoiceHistory'[QtyInvoiced]))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    [FirstDateInvoiced],
+    1,
+    'FactInvoiceHistory'[CustomerPONumber],
+    1,
+    'FactInvoiceHistory'[InvoiceNumber],
+    1,
+    'FactInvoiceHistory'[ManufacturerName],
+    1,
+    'FactInvoiceHistory'[InvoiceLineNumber],
+    1,
+    'DimProduct'[MfgPartNumber],
+    1,
+    'DimProduct'[PartName],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC,
+  [FirstDateInvoiced],
+  'FactInvoiceHistory'[CustomerPONumber],
+  'FactInvoiceHistory'[InvoiceNumber],
+  'FactInvoiceHistory'[ManufacturerName],
+  'FactInvoiceHistory'[InvoiceLineNumber],
+  'DimProduct'[MfgPartNumber],
+  'DimProduct'[PartName]
+
+===============
+
+DEFINE
+  VAR __DS0FilterTable = 
+    FILTER(
+      KEEPFILTERS(VALUES('DimDate'[CalendarDate])),
+      AND(
+        'DimDate'[CalendarDate] >= DATE(2019, 1, 1),
+        'DimDate'[CalendarDate] < DATE(2019, 1, 3)
+      )
+    )
+
+  VAR __DS0FilterTable2 = 
+    TREATAS({"P01633792"}, 'FactOrderHistory'[CustomerPONumber])
+
+  VAR __DS0FilterTable3 = 
+    TREATAS({"S48866164"}, 'FactOrderHistory'[OrderNumber])
+
+  VAR __DS0FilterTable4 = 
+    TREATAS({"Enterprise"}, 'DimCustomers'[Division])
+
+  VAR __DS0FilterTable5 = 
+    TREATAS(
+      {"International Enterprise-UK",
+        "Melissa Graham Teams"},
+      'DimCustomers'[RegionDivision]
+    )
+
+  VAR __DS0FilterTable6 = 
+    TREATAS({"International",
+      "Strategic Accounts"}, 'DimCustomers'[DivisionSegment])
+
+  VAR __DS0FilterTable7 = 
+    TREATAS(
+      {"Brian Araujo Retail",
+        "Justin Eisenberg Retail",
+        "Pharmaceutical",
+        "Telecom/Named",
+        "Verizon",
+        "International Enterprise-UK-Strategic Accounts-Melissa Graham Teams",
+        "International Enterprise-UK-Enterprise"},
+      'DimCustomers'[RegionName]
+    )
+
+  VAR __DS0FilterTable8 = 
+    TREATAS(
+      {"AT&T Affiliates (52530)",
+        "AT&T/THOMAS CLEARY (04989)",
+        "AT&T/TOM CLEARY (0067B)",
+        "Bob Crane (Justin Eisenberg) (42410)",
+        "Bristol Myers Squibb - Canada (CA00074)",
+        "Bristol Myers Squibb (00074)",
+        "CINGULAR (08005)",
+        "Eric Findeis (69190)",
+        "Eric Knight (71910)",
+        "GLAXOSMITHKLINE (16560)",
+        "GLAXOSMITHKLINE (UK16560)",
+        "J&J EA (02102)",
+        "J&J Servers (02101)",
+        "Joe Knutsen (Melissa Graham) (50920)",
+        "John Reckamp (66730)",
+        "Linda Presutti (Melissa Graham) (42770)",
+        "Linda Presutti/New Bus Dev (Melissa Graham) (42771)",
+        "Melissa Graham UK Teams",
+        "Melissa Graham/Doug Raynor (04812)",
+        "Melissa Graham/Doug Raynor-Canada (CA04812)",
+        "MELISSA GRAHAM-AT&T for resale (04810)",
+        "Merck - Canada (CA12115)",
+        "MERCK CANADA (12115)",
+        "MERCK/LO (12113)",
+        "MERCK/MARC (UK954)",
+        "MERCK/WILLIAMSON (12112)",
+        "Mike Krawchuk - Retail (Jesse Johnson) (62650)",
+        "NORTH CENTRAL/FRONTIER (17210)",
+        "Pharma - Chedid (75230)",
+        "Pharma - Crawley (47770)",
+        "Pharma - Daily (03970)",
+        "Pharma - Findeis (04940)",
+        "Pharma - J&J (02100)",
+        "Pharma - J. Johnson (Brian Araujo) (49160)",
+        "Pharma - Knapp (50521)",
+        "Pharma - Knight (41240)",
+        "Pharma - Marks (11932)",
+        "Pharma - Merck (12110)",
+        "Pharma - Miller (58230)",
+        "Pharma - Reckamp (19971)",
+        "Pharma - TBD (50431)",
+        "Pharma - TBD (56730)",
+        "Pharma US - Spooner/Knapp (74870)",
+        "Retail - Bostick (52880)",
+        "Retail - Butsko (50430)",
+        "Retail - J. Knutsen Canada (CA050)",
+        "Retail - Knapp (50520)",
+        "Retail - Knight (41241)",
+        "Retail - Malvasi (47781)",
+        "Retail - Miller (57410)",
+        "Retail - Reckamp (19970)",
+        "Retail - TBD (47780)",
+        "Retail - TBD 2 (49161)",
+        "SANOFI AVENTIS (04394)",
+        "Sanofi Aventis AP (HK0014)",
+        "Sanofi Aventis AP (UK077)",
+        "Sanofi Aventis Singapore (SG024)",
+        "SBC (08010)",
+        "Sears Projects (04811)",
+        "Sheila Ashy (Brian Araujo) (63880)",
+        "Steve Rudner (56830)",
+        "Telecom - Ashy - AT&T (55970)",
+        "Telecom - Butsko (56170)",
+        "Telecom - Klein - AT&T (00067)",
+        "Telecom - Malvasi - Sprint (04395)",
+        "Telecom - Malvasi (49162)",
+        "Telecom - Marks - Nokia/Avaya (00068)",
+        "Telecom - Marks (00069)",
+        "Telecom - Marks/Kirkman (04941)",
+        "Telecom - Miller (57411)",
+        "Telecom - Rudner - AT&T (04391)",
+        "Telecom - Sander - Brinks (Brian Araujo) (50522)",
+        "Telecom - TBD 1 (00071)",
+        "Telecom - TBD 2 (00711)",
+        "Telecom - TBD 3 (76350)",
+        "Telecom/Named - Dahliana (50432)",
+        "Telecom/Named - Simpson (47771)",
+        "Verizon - Rudner (00062)",
+        "Verizon - Ryder (59760)",
+        "Verizon - Ryder/Rudner (68230)",
+        "Verizon - Wandover (00161)",
+        "Verizon - Wishnow (67240)",
+        "VERIZON (00061)",
+        "Verizon New Business Development (00162)",
+        "VZW SOFTWARE (00210)",
+        "Yung Vo (Brian Araujo) (71920)"},
+      'DimBusinessUnit'[Level5Name]
+    )
+
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL(
+        ROLLUPGROUP(
+          'FactInvoiceHistory'[CustomerPONumber],
+          'FactInvoiceHistory'[InvoiceNumber],
+          'FactInvoiceHistory'[ManufacturerName],
+          'FactInvoiceHistory'[InvoiceLineNumber],
+          'DimProduct'[MfgPartNumber],
+          'DimProduct'[PartName]
+        ), "IsGrandTotalRowTotal"
+      ),
+      __DS0FilterTable,
+      __DS0FilterTable2,
+      __DS0FilterTable3,
+      __DS0FilterTable4,
+      __DS0FilterTable5,
+      __DS0FilterTable6,
+      __DS0FilterTable7,
+      __DS0FilterTable8,
+      "FirstDateInvoiced", 'FactInvoiceHistory'[FirstDateInvoiced],
+      "SumCustomerExtendedPriceUSD", CALCULATE(SUM('FactInvoiceHistory'[CustomerExtendedPriceUSD])),
+      "SumQtyInvoiced", CALCULATE(SUM('FactInvoiceHistory'[QtyInvoiced]))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    [FirstDateInvoiced],
+    1,
+    'FactInvoiceHistory'[CustomerPONumber],
+    1,
+    'FactInvoiceHistory'[InvoiceNumber],
+    1,
+    'FactInvoiceHistory'[ManufacturerName],
+    1,
+    'FactInvoiceHistory'[InvoiceLineNumber],
+    1,
+    'DimProduct'[MfgPartNumber],
+    1,
+    'DimProduct'[PartName],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC,
+  [FirstDateInvoiced],
+  'FactInvoiceHistory'[CustomerPONumber],
+  'FactInvoiceHistory'[InvoiceNumber],
+  'FactInvoiceHistory'[ManufacturerName],
+  'FactInvoiceHistory'[InvoiceLineNumber],
+  'DimProduct'[MfgPartNumber],
+  'DimProduct'[PartName]
+
+======
+DEFINE
+  VAR __DS0FilterTable = 
+    FILTER(
+      KEEPFILTERS(VALUES('DimDate'[CalendarDate])),
+      AND(
+        'DimDate'[CalendarDate] >= DATE(2019, 1, 1),
+        'DimDate'[CalendarDate] < DATE(2019, 2, 1)
+      )
+    )
+
+  VAR __DS0FilterTable2 = 
+    TREATAS({"00067"}, 'DimCustomers'[Saleskey])
+
+  VAR __DS0FilterTable3 = 
+    TREATAS({"Enterprise"}, 'DimCustomers'[Division])
+
+  VAR __DS0FilterTable4 = 
+    TREATAS(
+      {"International Enterprise-UK",
+        "Melissa Graham Teams"},
+      'DimCustomers'[RegionDivision]
+    )
+
+  VAR __DS0FilterTable5 = 
+    TREATAS({"International",
+      "Strategic Accounts"}, 'DimCustomers'[DivisionSegment])
+
+  VAR __DS0FilterTable6 = 
+    TREATAS(
+      {"Brian Araujo Retail",
+        "Justin Eisenberg Retail",
+        "Pharmaceutical",
+        "Telecom/Named",
+        "Verizon",
+        "International Enterprise-UK-Strategic Accounts-Melissa Graham Teams",
+        "International Enterprise-UK-Enterprise"},
+      'DimCustomers'[RegionName]
+    )
+
+  VAR __DS0FilterTable7 = 
+    TREATAS(
+      {"AT&T Affiliates (52530)",
+        "AT&T/THOMAS CLEARY (04989)",
+        "AT&T/TOM CLEARY (0067B)",
+        "Bob Crane (Justin Eisenberg) (42410)",
+        "Bristol Myers Squibb - Canada (CA00074)",
+        "Bristol Myers Squibb (00074)",
+        "CINGULAR (08005)",
+        "Eric Findeis (69190)",
+        "Eric Knight (71910)",
+        "GLAXOSMITHKLINE (16560)",
+        "GLAXOSMITHKLINE (UK16560)",
+        "J&J EA (02102)",
+        "J&J Servers (02101)",
+        "Joe Knutsen (Melissa Graham) (50920)",
+        "John Reckamp (66730)",
+        "Linda Presutti (Melissa Graham) (42770)",
+        "Linda Presutti/New Bus Dev (Melissa Graham) (42771)",
+        "Melissa Graham UK Teams",
+        "Melissa Graham/Doug Raynor (04812)",
+        "Melissa Graham/Doug Raynor-Canada (CA04812)",
+        "MELISSA GRAHAM-AT&T for resale (04810)",
+        "Merck - Canada (CA12115)",
+        "MERCK CANADA (12115)",
+        "MERCK/LO (12113)",
+        "MERCK/MARC (UK954)",
+        "MERCK/WILLIAMSON (12112)",
+        "Mike Krawchuk - Retail (Jesse Johnson) (62650)",
+        "NORTH CENTRAL/FRONTIER (17210)",
+        "Pharma - Chedid (75230)",
+        "Pharma - Crawley (47770)",
+        "Pharma - Daily (03970)",
+        "Pharma - Findeis (04940)",
+        "Pharma - J&J (02100)",
+        "Pharma - J. Johnson (Brian Araujo) (49160)",
+        "Pharma - Knapp (50521)",
+        "Pharma - Knight (41240)",
+        "Pharma - Marks (11932)",
+        "Pharma - Merck (12110)",
+        "Pharma - Miller (58230)",
+        "Pharma - Reckamp (19971)",
+        "Pharma - TBD (50431)",
+        "Pharma - TBD (56730)",
+        "Pharma US - Spooner/Knapp (74870)",
+        "Retail - Bostick (52880)",
+        "Retail - Butsko (50430)",
+        "Retail - J. Knutsen Canada (CA050)",
+        "Retail - Knapp (50520)",
+        "Retail - Knight (41241)",
+        "Retail - Malvasi (47781)",
+        "Retail - Miller (57410)",
+        "Retail - Reckamp (19970)",
+        "Retail - TBD (47780)",
+        "Retail - TBD 2 (49161)",
+        "SANOFI AVENTIS (04394)",
+        "Sanofi Aventis AP (HK0014)",
+        "Sanofi Aventis AP (UK077)",
+        "Sanofi Aventis Singapore (SG024)",
+        "SBC (08010)",
+        "Sears Projects (04811)",
+        "Sheila Ashy (Brian Araujo) (63880)",
+        "Steve Rudner (56830)",
+        "Telecom - Ashy - AT&T (55970)",
+        "Telecom - Butsko (56170)",
+        "Telecom - Klein - AT&T (00067)",
+        "Telecom - Malvasi - Sprint (04395)",
+        "Telecom - Malvasi (49162)",
+        "Telecom - Marks - Nokia/Avaya (00068)",
+        "Telecom - Marks (00069)",
+        "Telecom - Marks/Kirkman (04941)",
+        "Telecom - Miller (57411)",
+        "Telecom - Rudner - AT&T (04391)",
+        "Telecom - Sander - Brinks (Brian Araujo) (50522)",
+        "Telecom - TBD 1 (00071)",
+        "Telecom - TBD 2 (00711)",
+        "Telecom - TBD 3 (76350)",
+        "Telecom/Named - Dahliana (50432)",
+        "Telecom/Named - Simpson (47771)",
+        "Verizon - Rudner (00062)",
+        "Verizon - Ryder (59760)",
+        "Verizon - Ryder/Rudner (68230)",
+        "Verizon - Wandover (00161)",
+        "Verizon - Wishnow (67240)",
+        "VERIZON (00061)",
+        "Verizon New Business Development (00162)",
+        "VZW SOFTWARE (00210)",
+        "Yung Vo (Brian Araujo) (71920)"},
+      'DimBusinessUnit'[Level5Name]
+    )
+
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL(
+        ROLLUPGROUP(
+          'FactInvoiceHistory'[CustomerPONumber],
+          'FactInvoiceHistory'[InvoiceNumber],
+          'FactInvoiceHistory'[ManufacturerName],
+          'FactInvoiceHistory'[InvoiceLineNumber],
+          'DimProduct'[MfgPartNumber],
+          'DimProduct'[PartName]
+        ), "IsGrandTotalRowTotal"
+      ),
+      __DS0FilterTable,
+      __DS0FilterTable2,
+      __DS0FilterTable3,
+      __DS0FilterTable4,
+      __DS0FilterTable5,
+      __DS0FilterTable6,
+      __DS0FilterTable7,
+      "FirstDateInvoiced", 'FactInvoiceHistory'[FirstDateInvoiced],
+      "SumCustomerExtendedPriceUSD", CALCULATE(SUM('FactInvoiceHistory'[CustomerExtendedPriceUSD])),
+      "SumQtyInvoiced", CALCULATE(SUM('FactInvoiceHistory'[QtyInvoiced]))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    [FirstDateInvoiced],
+    1,
+    'FactInvoiceHistory'[CustomerPONumber],
+    1,
+    'FactInvoiceHistory'[InvoiceNumber],
+    1,
+    'FactInvoiceHistory'[ManufacturerName],
+    1,
+    'FactInvoiceHistory'[InvoiceLineNumber],
+    1,
+    'DimProduct'[MfgPartNumber],
+    1,
+    'DimProduct'[PartName],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC,
+  [FirstDateInvoiced],
+  'FactInvoiceHistory'[CustomerPONumber],
+  'FactInvoiceHistory'[InvoiceNumber],
+  'FactInvoiceHistory'[ManufacturerName],
+  'FactInvoiceHistory'[InvoiceLineNumber],
+  'DimProduct'[MfgPartNumber],
+  'DimProduct'[PartName]
+
+=============
+
+DEFINE
+  VAR __DS0FilterTable = 
+    FILTER(
+      KEEPFILTERS(VALUES('DimDate'[CalendarDate])),
+      AND(
+        'DimDate'[CalendarDate] >= DATE(2019, 1, 1),
+        'DimDate'[CalendarDate] < DATE(2019, 1, 3)
+      )
+    )
+
+  VAR __DS0FilterTable2 = 
+    TREATAS({"Enterprise"}, 'DimCustomers'[Division])
+
+  VAR __DS0FilterTable3 = 
+    TREATAS(
+      {"International Enterprise-UK",
+        "Melissa Graham Teams"},
+      'DimCustomers'[RegionDivision]
+    )
+
+  VAR __DS0FilterTable4 = 
+    TREATAS({"International",
+      "Strategic Accounts"}, 'DimCustomers'[DivisionSegment])
+
+  VAR __DS0FilterTable5 = 
+    TREATAS(
+      {"Brian Araujo Retail",
+        "Justin Eisenberg Retail",
+        "Pharmaceutical",
+        "Telecom/Named",
+        "Verizon",
+        "International Enterprise-UK-Strategic Accounts-Melissa Graham Teams",
+        "International Enterprise-UK-Enterprise"},
+      'DimCustomers'[RegionName]
+    )
+
+  VAR __DS0FilterTable6 = 
+    TREATAS(
+      {"AT&T Affiliates (52530)",
+        "AT&T/THOMAS CLEARY (04989)",
+        "AT&T/TOM CLEARY (0067B)",
+        "Bob Crane (Justin Eisenberg) (42410)",
+        "Bristol Myers Squibb - Canada (CA00074)",
+        "Bristol Myers Squibb (00074)",
+        "CINGULAR (08005)",
+        "Eric Findeis (69190)",
+        "Eric Knight (71910)",
+        "GLAXOSMITHKLINE (16560)",
+        "GLAXOSMITHKLINE (UK16560)",
+        "J&J EA (02102)",
+        "J&J Servers (02101)",
+        "Joe Knutsen (Melissa Graham) (50920)",
+        "John Reckamp (66730)",
+        "Linda Presutti (Melissa Graham) (42770)",
+        "Linda Presutti/New Bus Dev (Melissa Graham) (42771)",
+        "Melissa Graham UK Teams",
+        "Melissa Graham/Doug Raynor (04812)",
+        "Melissa Graham/Doug Raynor-Canada (CA04812)",
+        "MELISSA GRAHAM-AT&T for resale (04810)",
+        "Merck - Canada (CA12115)",
+        "MERCK CANADA (12115)",
+        "MERCK/LO (12113)",
+        "MERCK/MARC (UK954)",
+        "MERCK/WILLIAMSON (12112)",
+        "Mike Krawchuk - Retail (Jesse Johnson) (62650)",
+        "NORTH CENTRAL/FRONTIER (17210)",
+        "Pharma - Chedid (75230)",
+        "Pharma - Crawley (47770)",
+        "Pharma - Daily (03970)",
+        "Pharma - Findeis (04940)",
+        "Pharma - J&J (02100)",
+        "Pharma - J. Johnson (Brian Araujo) (49160)",
+        "Pharma - Knapp (50521)",
+        "Pharma - Knight (41240)",
+        "Pharma - Marks (11932)",
+        "Pharma - Merck (12110)",
+        "Pharma - Miller (58230)",
+        "Pharma - Reckamp (19971)",
+        "Pharma - TBD (50431)",
+        "Pharma - TBD (56730)",
+        "Pharma US - Spooner/Knapp (74870)",
+        "Retail - Bostick (52880)",
+        "Retail - Butsko (50430)",
+        "Retail - J. Knutsen Canada (CA050)",
+        "Retail - Knapp (50520)",
+        "Retail - Knight (41241)",
+        "Retail - Malvasi (47781)",
+        "Retail - Miller (57410)",
+        "Retail - Reckamp (19970)",
+        "Retail - TBD (47780)",
+        "Retail - TBD 2 (49161)",
+        "SANOFI AVENTIS (04394)",
+        "Sanofi Aventis AP (HK0014)",
+        "Sanofi Aventis AP (UK077)",
+        "Sanofi Aventis Singapore (SG024)",
+        "SBC (08010)",
+        "Sears Projects (04811)",
+        "Sheila Ashy (Brian Araujo) (63880)",
+        "Steve Rudner (56830)",
+        "Telecom - Ashy - AT&T (55970)",
+        "Telecom - Butsko (56170)",
+        "Telecom - Klein - AT&T (00067)",
+        "Telecom - Malvasi - Sprint (04395)",
+        "Telecom - Malvasi (49162)",
+        "Telecom - Marks - Nokia/Avaya (00068)",
+        "Telecom - Marks (00069)",
+        "Telecom - Marks/Kirkman (04941)",
+        "Telecom - Miller (57411)",
+        "Telecom - Rudner - AT&T (04391)",
+        "Telecom - Sander - Brinks (Brian Araujo) (50522)",
+        "Telecom - TBD 1 (00071)",
+        "Telecom - TBD 2 (00711)",
+        "Telecom - TBD 3 (76350)",
+        "Telecom/Named - Dahliana (50432)",
+        "Telecom/Named - Simpson (47771)",
+        "Verizon - Rudner (00062)",
+        "Verizon - Ryder (59760)",
+        "Verizon - Ryder/Rudner (68230)",
+        "Verizon - Wandover (00161)",
+        "Verizon - Wishnow (67240)",
+        "VERIZON (00061)",
+        "Verizon New Business Development (00162)",
+        "VZW SOFTWARE (00210)",
+        "Yung Vo (Brian Araujo) (71920)"},
+      'DimBusinessUnit'[Level5Name]
+    )
+
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL(
+        ROLLUPGROUP(
+          'FactInvoiceHistory'[CustomerPONumber],
+          'FactInvoiceHistory'[InvoiceNumber],
+          'FactInvoiceHistory'[ManufacturerName],
+          'FactInvoiceHistory'[InvoiceLineNumber],
+          'DimProduct'[MfgPartNumber],
+          'DimProduct'[PartName],
+          'FactOrderHistory'[OrderNumber]
+        ), "IsGrandTotalRowTotal"
+      ),
+      __DS0FilterTable,
+      __DS0FilterTable2,
+      __DS0FilterTable3,
+      __DS0FilterTable4,
+      __DS0FilterTable5,
+      __DS0FilterTable6,
+      "FirstDateInvoiced", 'FactInvoiceHistory'[FirstDateInvoiced],
+      "SumCustomerExtendedPriceUSD", IGNORE(CALCULATE(SUM('FactInvoiceHistory'[CustomerExtendedPriceUSD]))),
+      "SumQtyInvoiced", IGNORE(CALCULATE(SUM('FactInvoiceHistory'[QtyInvoiced])))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    [FirstDateInvoiced],
+    1,
+    'FactInvoiceHistory'[CustomerPONumber],
+    1,
+    'FactInvoiceHistory'[InvoiceNumber],
+    1,
+    'FactInvoiceHistory'[ManufacturerName],
+    1,
+    'FactInvoiceHistory'[InvoiceLineNumber],
+    1,
+    'DimProduct'[MfgPartNumber],
+    1,
+    'DimProduct'[PartName],
+    1,
+    'FactOrderHistory'[OrderNumber],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC,
+  [FirstDateInvoiced],
+  'FactInvoiceHistory'[CustomerPONumber],
+  'FactInvoiceHistory'[InvoiceNumber],
+  'FactInvoiceHistory'[ManufacturerName],
+  'FactInvoiceHistory'[InvoiceLineNumber],
+  'DimProduct'[MfgPartNumber],
+  'DimProduct'[PartName],
+  'FactOrderHistory'[OrderNumber]
+
+===========
+DEFINE
+  VAR __DS0FilterTable = 
+    FILTER(
+      KEEPFILTERS(VALUES('DimDate'[CalendarDate])),
+      AND(
+        'DimDate'[CalendarDate] >= DATE(2019, 1, 1),
+        'DimDate'[CalendarDate] < DATE(2019, 2, 1)
+      )
+    )
+
+  VAR __DS0FilterTable2 = 
+    TREATAS({"Enterprise"}, 'DimCustomers'[Division])
+
+  VAR __DS0FilterTable3 = 
+    TREATAS(
+      {"International Enterprise-UK",
+        "Melissa Graham Teams"},
+      'DimCustomers'[RegionDivision]
+    )
+
+  VAR __DS0FilterTable4 = 
+    TREATAS({"International",
+      "Strategic Accounts"}, 'DimCustomers'[DivisionSegment])
+
+  VAR __DS0FilterTable5 = 
+    TREATAS(
+      {"Brian Araujo Retail",
+        "Justin Eisenberg Retail",
+        "Pharmaceutical",
+        "Telecom/Named",
+        "Verizon",
+        "International Enterprise-UK-Strategic Accounts-Melissa Graham Teams",
+        "International Enterprise-UK-Enterprise"},
+      'DimCustomers'[RegionName]
+    )
+
+  VAR __DS0FilterTable6 = 
+    TREATAS(
+      {"AT&T Affiliates (52530)",
+        "AT&T/THOMAS CLEARY (04989)",
+        "AT&T/TOM CLEARY (0067B)",
+        "Bob Crane (Justin Eisenberg) (42410)",
+        "Bristol Myers Squibb - Canada (CA00074)",
+        "Bristol Myers Squibb (00074)",
+        "CINGULAR (08005)",
+        "Eric Findeis (69190)",
+        "Eric Knight (71910)",
+        "GLAXOSMITHKLINE (16560)",
+        "GLAXOSMITHKLINE (UK16560)",
+        "J&J EA (02102)",
+        "J&J Servers (02101)",
+        "Joe Knutsen (Melissa Graham) (50920)",
+        "John Reckamp (66730)",
+        "Linda Presutti (Melissa Graham) (42770)",
+        "Linda Presutti/New Bus Dev (Melissa Graham) (42771)",
+        "Melissa Graham UK Teams",
+        "Melissa Graham/Doug Raynor (04812)",
+        "Melissa Graham/Doug Raynor-Canada (CA04812)",
+        "MELISSA GRAHAM-AT&T for resale (04810)",
+        "Merck - Canada (CA12115)",
+        "MERCK CANADA (12115)",
+        "MERCK/LO (12113)",
+        "MERCK/MARC (UK954)",
+        "MERCK/WILLIAMSON (12112)",
+        "Mike Krawchuk - Retail (Jesse Johnson) (62650)",
+        "NORTH CENTRAL/FRONTIER (17210)",
+        "Pharma - Chedid (75230)",
+        "Pharma - Crawley (47770)",
+        "Pharma - Daily (03970)",
+        "Pharma - Findeis (04940)",
+        "Pharma - J&J (02100)",
+        "Pharma - J. Johnson (Brian Araujo) (49160)",
+        "Pharma - Knapp (50521)",
+        "Pharma - Knight (41240)",
+        "Pharma - Marks (11932)",
+        "Pharma - Merck (12110)",
+        "Pharma - Miller (58230)",
+        "Pharma - Reckamp (19971)",
+        "Pharma - TBD (50431)",
+        "Pharma - TBD (56730)",
+        "Pharma US - Spooner/Knapp (74870)",
+        "Retail - Bostick (52880)",
+        "Retail - Butsko (50430)",
+        "Retail - J. Knutsen Canada (CA050)",
+        "Retail - Knapp (50520)",
+        "Retail - Knight (41241)",
+        "Retail - Malvasi (47781)",
+        "Retail - Miller (57410)",
+        "Retail - Reckamp (19970)",
+        "Retail - TBD (47780)",
+        "Retail - TBD 2 (49161)",
+        "SANOFI AVENTIS (04394)",
+        "Sanofi Aventis AP (HK0014)",
+        "Sanofi Aventis AP (UK077)",
+        "Sanofi Aventis Singapore (SG024)",
+        "SBC (08010)",
+        "Sears Projects (04811)",
+        "Sheila Ashy (Brian Araujo) (63880)",
+        "Steve Rudner (56830)",
+        "Telecom - Ashy - AT&T (55970)",
+        "Telecom - Butsko (56170)",
+        "Telecom - Klein - AT&T (00067)",
+        "Telecom - Malvasi - Sprint (04395)",
+        "Telecom - Malvasi (49162)",
+        "Telecom - Marks - Nokia/Avaya (00068)",
+        "Telecom - Marks (00069)",
+        "Telecom - Marks/Kirkman (04941)",
+        "Telecom - Miller (57411)",
+        "Telecom - Rudner - AT&T (04391)",
+        "Telecom - Sander - Brinks (Brian Araujo) (50522)",
+        "Telecom - TBD 1 (00071)",
+        "Telecom - TBD 2 (00711)",
+        "Telecom - TBD 3 (76350)",
+        "Telecom/Named - Dahliana (50432)",
+        "Telecom/Named - Simpson (47771)",
+        "Verizon - Rudner (00062)",
+        "Verizon - Ryder (59760)",
+        "Verizon - Ryder/Rudner (68230)",
+        "Verizon - Wandover (00161)",
+        "Verizon - Wishnow (67240)",
+        "VERIZON (00061)",
+        "Verizon New Business Development (00162)",
+        "VZW SOFTWARE (00210)",
+        "Yung Vo (Brian Araujo) (71920)"},
+      'DimBusinessUnit'[Level5Name]
+    )
+
+EVALUATE
+  TOPN(
+    502,
+    SUMMARIZECOLUMNS(
+      ROLLUPADDISSUBTOTAL(
+        ROLLUPGROUP(
+          'FactInvoiceHistory'[CustomerPONumber],
+          'FactInvoiceHistory'[InvoiceNumber],
+          'FactInvoiceHistory'[ManufacturerName],
+          'FactInvoiceHistory'[InvoiceLineNumber],
+          'DimProduct'[MfgPartNumber]
+        ), "IsGrandTotalRowTotal"
+      ),
+      __DS0FilterTable,
+      __DS0FilterTable2,
+      __DS0FilterTable3,
+      __DS0FilterTable4,
+      __DS0FilterTable5,
+      __DS0FilterTable6,
+      "FirstDateInvoiced", 'FactInvoiceHistory'[FirstDateInvoiced],
+      "SumCustomerExtendedPriceUSD", CALCULATE(SUM('FactInvoiceHistory'[CustomerExtendedPriceUSD])),
+      "SumQtyInvoiced", CALCULATE(SUM('FactInvoiceHistory'[QtyInvoiced]))
+    ),
+    [IsGrandTotalRowTotal],
+    0,
+    [FirstDateInvoiced],
+    1,
+    'FactInvoiceHistory'[CustomerPONumber],
+    1,
+    'FactInvoiceHistory'[InvoiceNumber],
+    1,
+    'FactInvoiceHistory'[ManufacturerName],
+    1,
+    'FactInvoiceHistory'[InvoiceLineNumber],
+    1,
+    'DimProduct'[MfgPartNumber],
+    1
+  )
+
+ORDER BY
+  [IsGrandTotalRowTotal] DESC,
+  [FirstDateInvoiced],
+  'FactInvoiceHistory'[CustomerPONumber],
+  'FactInvoiceHistory'[InvoiceNumber],
+  'FactInvoiceHistory'[ManufacturerName],
+  'FactInvoiceHistory'[InvoiceLineNumber],
+  'DimProduct'[MfgPartNumber]
+
+======
